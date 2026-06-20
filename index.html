@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XMAX 2026 — Planner Servis</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏍️</text></svg>" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.10.0/iconfont/tabler-icons.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-brand">
+          <span class="brand-tag">XMAX · 2026</span>
+          <h1 class="brand-title">Planner Servis</h1>
+        </div>
+        <div class="header-actions">
+          <button class="btn" onclick="exportData()">
+            <i class="ti ti-download"></i> Export
+          </button>
+          <button class="btn" onclick="document.getElementById('importFile').click()">
+            <i class="ti ti-upload"></i> Import
+          </button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)" />
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+
+      <!-- Odometer + quick stats -->
+      <section class="odo-section">
+        <div class="odo-row">
+          <div class="odo-card">
+            <div class="odo-left">
+              <div class="stat-lbl">Odometer saat ini</div>
+              <div class="odo-input-row">
+                <input class="odo-input" type="number" id="odometerInput" placeholder="0" oninput="saveOdo()" />
+                <span class="odo-unit">km</span>
+              </div>
+            </div>
+            <i class="ti ti-gauge odo-icon"></i>
+          </div>
+          <div class="stat-card clickable" onclick="setTab('jadwal')">
+            <div class="stat-val" style="color:var(--red)" id="cntOverdue">0</div>
+            <div class="stat-lbl">Terlambat</div>
+          </div>
+          <div class="stat-card clickable" onclick="setTab('jadwal')">
+            <div class="stat-val" style="color:var(--amber)" id="cntSoon">0</div>
+            <div class="stat-lbl">Segera</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tabs -->
+      <nav class="tab-row">
+        <button class="tab active" id="tab-form" onclick="setTab('form')">
+          <i class="ti ti-clipboard-list"></i> Input servis
+        </button>
+        <button class="tab" id="tab-jadwal" onclick="setTab('jadwal')">
+          <i class="ti ti-list-check"></i> Jadwal
+        </button>
+        <button class="tab" id="tab-riwayat" onclick="setTab('riwayat')">
+          <i class="ti ti-history"></i> Riwayat
+        </button>
+        <button class="tab" id="tab-dashboard" onclick="setTab('dashboard')">
+          <i class="ti ti-chart-bar"></i> Dashboard
+        </button>
+      </nav>
+
+      <!-- PANEL: FORM INPUT SERVIS -->
+      <section class="panel active" id="panel-form">
+        <div class="form-card">
+          <div class="form-title"><i class="ti ti-clipboard-list"></i> Form input servis</div>
+          <div class="fields-grid">
+            <div class="form-group">
+              <label class="form-label">Tanggal servis</label>
+              <input type="date" id="fDate" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">KM saat servis</label>
+              <input type="number" id="fKm" placeholder="contoh: 5000" />
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Bengkel / catatan (opsional)</label>
+              <input type="text" id="fNote" placeholder="Nama bengkel, produk yang dipakai, dll." />
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Biaya total (Rp, opsional)</label>
+              <input type="number" id="fCost" placeholder="0" />
+            </div>
+          </div>
+
+          <div class="parts-check-label">
+            <span><i class="ti ti-checkbox"></i> Part yang diservis — centang semua yang dikerjakan</span>
+            <span class="sel-links">
+              <button class="sel-btn" onclick="selectAllParts()">Pilih semua</button> ·
+              <button class="sel-btn" onclick="clearAllParts()">Hapus semua</button>
+            </span>
+          </div>
+          <div class="parts-check-grid" id="partsCheckGrid"></div>
+
+          <button class="btn btn-primary btn-submit" onclick="submitService()">
+            <i class="ti ti-check"></i> Simpan servis
+          </button>
+        </div>
+      </section>
+
+      <!-- PANEL: JADWAL -->
+      <section class="panel" id="panel-jadwal">
+        <div class="parts-grid" id="schedList"></div>
+      </section>
+
+      <!-- PANEL: RIWAYAT -->
+      <section class="panel" id="panel-riwayat">
+        <div id="histContainer"></div>
+      </section>
+
+      <!-- PANEL: DASHBOARD -->
+      <section class="panel" id="panel-dashboard">
+        <div class="dash-stats" id="dashStats"></div>
+
+        <div class="dash-card">
+          <div class="dash-card-title"><i class="ti ti-chart-line"></i> Biaya servis per bulan</div>
+          <div class="chart-wrap"><canvas id="costChart"></canvas></div>
+        </div>
+
+        <div class="dash-grid-2">
+          <div class="dash-card">
+            <div class="dash-card-title"><i class="ti ti-chart-pie"></i> Distribusi biaya per part</div>
+            <div class="chart-wrap small"><canvas id="partCostChart"></canvas></div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title"><i class="ti ti-list-numbers"></i> Frekuensi servis per part</div>
+            <div id="freqList"></div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card-title"><i class="ti ti-road"></i> Jarak tempuh antar servis</div>
+          <div class="chart-wrap"><canvas id="kmChart"></canvas></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
