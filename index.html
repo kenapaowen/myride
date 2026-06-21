@@ -19,8 +19,8 @@
     <header class="header">
       <div class="header-inner">
         <div class="header-brand">
-          <span class="brand-tag">XMAX · 2026</span>
-          <h1 class="brand-title">Planner Servis</h1>
+          <span class="brand-tag" id="brandTag">PLANNER SERVIS</span>
+          <h1 class="brand-title" id="brandTitle">Motor Saya</h1>
         </div>
         <div class="header-actions">
           <button class="btn" onclick="exportData()">
@@ -32,7 +32,45 @@
           <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)" />
         </div>
       </div>
+
+      <!-- Motor selector bar -->
+      <div class="motor-bar">
+        <div class="motor-select-wrap">
+          <i class="ti ti-motorbike"></i>
+          <select id="motorSelect" onchange="switchMotor(this.value)"></select>
+        </div>
+        <div class="motor-bar-actions">
+          <button class="btn btn-ghost" onclick="openMotorModal('edit')">
+            <i class="ti ti-edit"></i> Edit
+          </button>
+          <button class="btn btn-ghost" onclick="openMotorModal('add')">
+            <i class="ti ti-plus"></i> Tambah motor
+          </button>
+          <button class="btn btn-ghost btn-danger" onclick="removeCurrentMotor()" id="btnDeleteMotor">
+            <i class="ti ti-trash"></i>
+          </button>
+        </div>
+      </div>
     </header>
+
+    <!-- Motor add/edit modal -->
+    <div class="modal-overlay" id="motorModalOverlay" onclick="closeMotorModalBg(event)">
+      <div class="modal-card">
+        <div class="modal-title" id="motorModalTitle">Tambah motor</div>
+        <div class="form-group">
+          <label class="form-label">Nama motor</label>
+          <input type="text" id="motorNameInput" placeholder="contoh: Yamaha XMAX 2026" />
+        </div>
+        <div class="form-group" style="margin-top:10px">
+          <label class="form-label">Label singkat (opsional)</label>
+          <input type="text" id="motorTagInput" placeholder="contoh: XMAX · 2026" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn" onclick="closeMotorModal()">Batal</button>
+          <button class="btn btn-primary" onclick="saveMotorModal()">Simpan</button>
+        </div>
+      </div>
+    </div>
 
     <main class="main">
 

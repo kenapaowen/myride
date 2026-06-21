@@ -1,19 +1,24 @@
-# 🏍️ XMAX 2026 — Planner Servis
+# 🏍️ Planner Servis Motor (Multi-Motor)
 
-Web app untuk memantau jadwal servis Yamaha XMAX Connected 2026, dengan input servis berbasis form dan dashboard riwayat.
+Web app untuk memantau jadwal servis motor — mendukung **lebih dari satu motor** sekaligus, dengan input servis berbasis form dan dashboard riwayat.
 
 ## Fitur
 
+- **Multi-motor** — tambah, edit, hapus, dan switch antar beberapa motor lewat dropdown di header. Setiap motor punya odometer, jadwal, riwayat, dan dashboard masing-masing (data terpisah)
 - **Input servis (form)** — isi tanggal, KM, biaya, catatan bengkel, lalu **centang semua part** yang dikerjakan dalam satu sesi servis sekaligus
 - **Jadwal** — status tiap part (16 part) dengan indikator merah/kuning/hijau berdasarkan KM terakhir servis
 - **Riwayat** — daftar semua sesi servis beserta part yang dikerjakan, biaya, dan catatan
-- **Dashboard** — ringkasan visual:
+- **Dashboard** — ringkasan visual per motor:
   - Total biaya, jumlah sesi servis, jumlah part diservis, rata-rata biaya per sesi
   - Grafik biaya servis per bulan
   - Distribusi biaya per part (pie chart)
   - Frekuensi servis per part
   - Grafik jarak tempuh antar servis
-- **Export / Import JSON** — backup data dan pindah device
+- **Export / Import JSON** — backup data **semua motor sekaligus** dan pindah device
+
+## Interval default
+
+Interval servis bawaan (16 part) di-setup khusus untuk Yamaha XMAX Connected 2026, tapi berlaku sebagai default untuk motor baru manapun yang Anda tambahkan. Anda bisa menambahkan motor lain (motor lama, motor keluarga, dll.) dan tetap pakai jadwal yang sama, atau jadikan acuan umum.
 
 ## Cara Deploy ke GitHub Pages
 
@@ -72,14 +77,15 @@ xmax-planner/
 
 ## Cara Pakai
 
-1. **Tab "Input servis"** — isi tanggal & KM servis, centang semua part yang dikerjakan di sesi itu, lalu simpan
-2. **Tab "Jadwal"** — pantau part mana yang sudah waktunya servis
-3. **Tab "Riwayat"** — lihat histori lengkap semua sesi servis
-4. **Tab "Dashboard"** — analisis biaya & pola servis dalam bentuk grafik
+1. **Pilih/tambah motor** — gunakan dropdown di header untuk switch motor, atau tombol "Tambah motor" untuk motor baru. Tombol "Edit" untuk ubah nama, tombol tempat sampah untuk hapus motor (minimal harus ada 1 motor)
+2. **Tab "Input servis"** — isi tanggal & KM servis, centang semua part yang dikerjakan di sesi itu, lalu simpan
+3. **Tab "Jadwal"** — pantau part mana yang sudah waktunya servis (khusus motor yang sedang aktif)
+4. **Tab "Riwayat"** — lihat histori lengkap semua sesi servis motor yang aktif
+5. **Tab "Dashboard"** — analisis biaya & pola servis motor yang aktif dalam bentuk grafik
 
 ## Data & Penyimpanan
 
-Data disimpan di **localStorage** browser (lokal di perangkat). Gunakan fitur **Export** untuk backup ke file `.json` dan **Import** untuk memuat kembali di perangkat lain.
+Data disimpan di **localStorage** browser (lokal di perangkat), terorganisir per motor. Gunakan fitur **Export** untuk backup seluruh data semua motor ke file `.json`, dan **Import** untuk memuat kembali di perangkat lain. File lama (versi 1 motor) tetap bisa di-import dan otomatis jadi motor baru.
 
 ## Interval Servis
 

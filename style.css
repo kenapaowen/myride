@@ -71,6 +71,70 @@ body {
 }
 .header-actions { display: flex; gap: 8px; }
 
+/* ── Motor bar ── */
+.motor-bar {
+  max-width: 920px;
+  margin: 12px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.motor-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  flex: 1;
+  min-width: 200px;
+}
+.motor-select-wrap i { color: var(--amber); font-size: 16px; flex-shrink: 0; }
+.motor-select-wrap select {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 6px;
+  cursor: pointer;
+}
+.motor-select-wrap select option { background: var(--bg-card); color: var(--text-primary); }
+.motor-bar-actions { display: flex; gap: 6px; }
+.btn-ghost { background: transparent; padding: 8px 12px; font-size: 12px; }
+.btn-danger { color: var(--red-text); }
+.btn-danger:hover { background: var(--red-bg); color: var(--red-text); border-color: var(--red); }
+
+/* ── Modal ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  width: 100%;
+  max-width: 360px;
+}
+.modal-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+.modal-actions { display: flex; gap: 8px; margin-top: 18px; }
+.modal-actions .btn { flex: 1; justify-content: center; }
+
 /* ── Main ── */
 .main {
   max-width: 920px;
